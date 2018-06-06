@@ -23,6 +23,12 @@
   "bugs": {
     "url": "https://github.com/dvajs/dva/issues"
   },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "node test/test.js",
+    "pretest": "npm run build"
+  },
   "dependencies": {
     "flatten": "^1.0.2",
     "global": "^4.3.2",
@@ -36,8 +42,14 @@
     "redux": "4.x"
   },
   "devDependencies": {
-    "redux": "^4.0.0"
+    "redux": "^4.0.0",
+    "rollup": "^0.59.0",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-node-resolve": "^3.0.0"
   },
+  "main": "dist/dva-core.cjs.js",
+  "module": "dist/dva-core.esm.js",
+  "browser": "dist/dva-core.umd.js",
   "files": [
     "lib",
     "src",
