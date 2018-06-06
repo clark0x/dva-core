@@ -1,35 +1,50 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import pkg from './package.json';
+import babel from 'rollup-plugin-babel';
+import istanbul from 'rollup-plugin-istanbul';
 
-export default [
-  // browser-friendly UMD build
-  {
-    input: 'src/index.js',
-    output: {
-      name: 'dva-core',
-      file: pkg.browser,
-      format: 'umd'
-    },
-    external: Object.keys(pkg.dependencies),
-    plugins: [
-      resolve(), // so Rollup can find `ms`
-      commonjs() // so Rollup can convert `ms` to an ES module
-    ]
-  },
+let pkg = require('./package.json');
+let external = Object.keys(pkg.dependencies);
 
-  // CommonJS (for Node) and ES module (for bundlers) build.
-  // (We could have three entries in the configuration array
-  // instead of two, but it's quicker to generate multiple
-  // builds from a single configuration where possible, using
-  // an array for the `output` option, where we can specify
-  // `file` and `format` for each target)
-  {
-    input: 'src/index.js',
-    external: ['ms'],
-    output: [
-      { file: pkg.main, format: 'cjs' },
-      { file: pkg.module, format: 'es' }
-    ]
-  }
+let plugins = [
+  babel({
+    'presets': [
+      [
+        '@babel/preset-es2015',
+        {
+          'modules': false,
+        },
+      ],
+    ],
+    'plugins': [
+      '@babel/plugin-proposal-object-rest-spread',
+    ],
+    'exclude': [
+      'node_modules/**',
+      'test/**',
+    ],
+  }),
 ];
+
+if (process.env.BUILD !== 'production') {
+  plugins.push(istanbul({
+    exclude: ['test/**/*', 'node_modules/**/*'],
+  }));
+}
+
+export default {
+  entry: 'src/index.js',
+  plugins: plugins,
+  external: external,
+  targets: [
+    {
+      dest: pkg.main,
+      format: 'umd',
+      name: 'dva-core',
+      sourceMap: true,
+    },
+    {
+      dest: pkg.module,
+      format: 'es',
+      sourceMap: true,
+    },
+  ],
+};

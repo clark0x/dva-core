@@ -24,10 +24,12 @@
     "url": "https://github.com/dvajs/dva/issues"
   },
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "test": "node test/test.js",
-    "pretest": "npm run build"
+    "prebuild": "eslint lib test",
+    "build": "rollup -c --environment BUILD:production",
+    "watch": "rollup -c -w",
+    "pretest": "rollup -c",
+    "test": "jest",
+    "prepublish": "BUILD=production npm test"
   },
   "dependencies": {
     "flatten": "^1.0.2",
@@ -42,10 +44,23 @@
     "redux": "4.x"
   },
   "devDependencies": {
-    "redux": "^4.0.0",
+    "@babel/core": "^7.0.0-beta.49",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.49",
+    "@babel/preset-es2015": "^7.0.0-beta.49",
+    "@babel/register": "^7.0.0-beta.49",
+    "babel-core": "^7.0.0-0",
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "^23.0.1",
+    "eslint": "^4.1.1",
+    "expect": "^23.1.0",
+    "istanbul": "^0.4.5",
+    "jest": "^23.1.0",
     "rollup": "^0.59.0",
+    "rollup-plugin-babel": "^4.0.0-beta.4",
     "rollup-plugin-commonjs": "^9.1.0",
-    "rollup-plugin-node-resolve": "^3.0.0"
+    "rollup-plugin-istanbul": "^2.0.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-watch": "^4.0.0"
   },
   "main": "dist/dva-core.cjs.js",
   "module": "dist/dva-core.esm.js",
