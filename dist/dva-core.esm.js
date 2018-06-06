@@ -6,7 +6,8 @@ import flatten from 'flatten';
 import window from 'global/window';
 import * as sagaEffects from 'redux-saga/effects';
 import { fork, take, cancel, put, takeLatest, throttle, takeEvery } from 'redux-saga/effects';
-import createSagaMiddleware from 'redux-saga/lib/internal/middleware';
+import 'regenerator-runtime/runtime';
+import createSagaMiddleware, { END } from 'redux-saga';
 
 function _typeof(obj) {
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -1077,7 +1078,12 @@ function create() {
     }); // Extend store
 
     store.runSaga = sagaMiddleware.run;
-    store.asyncReducers = {}; // Execute listeners when state is changed
+    store.asyncReducers = {};
+
+    store.close = function () {
+      return store.dispatch(END);
+    }; // Execute listeners when state is changed
+
 
     var listeners = plugin.get('onStateChange');
     var _iteratorNormalCompletion2 = true;

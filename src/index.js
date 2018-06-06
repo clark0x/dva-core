@@ -1,5 +1,6 @@
+import "regenerator-runtime/runtime";
 import { combineReducers } from 'redux';
-import createSagaMiddleware from 'redux-saga/lib/internal/middleware';
+import createSagaMiddleware, { END } from 'redux-saga';
 import invariant from 'invariant';
 import checkModel from './checkModel';
 import prefixNamespace from './prefixNamespace';
@@ -181,6 +182,7 @@ export default function create(hooksAndOpts = {}, createOpts = {}) {
     // Extend store
     store.runSaga = sagaMiddleware.run;
     store.asyncReducers = {};
+    store.close = () => store.dispatch(END);
 
     // Execute listeners when state is changed
     const listeners = plugin.get('onStateChange');

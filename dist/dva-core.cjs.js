@@ -1,15 +1,15 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('is-plain-object'), require('invariant'), require('warning'), require('redux'), require('flatten'), require('global/window'), require('redux-saga/effects'), require('redux-saga/lib/internal/middleware')) :
-  typeof define === 'function' && define.amd ? define(['is-plain-object', 'invariant', 'warning', 'redux', 'flatten', 'global/window', 'redux-saga/effects', 'redux-saga/lib/internal/middleware'], factory) :
-  (global['dva-core'] = factory(global.isPlainObject,global.invariant,global.warning,global.redux,global.flatten,global.window,global.sagaEffects,global.createSagaMiddleware));
-}(this, (function (isPlainObject,invariant,warning,redux,flatten,window,sagaEffects,createSagaMiddleware) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('is-plain-object'), require('invariant'), require('warning'), require('redux'), require('flatten'), require('global/window'), require('redux-saga/effects'), require('regenerator-runtime/runtime'), require('redux-saga')) :
+  typeof define === 'function' && define.amd ? define(['is-plain-object', 'invariant', 'warning', 'redux', 'flatten', 'global/window', 'redux-saga/effects', 'regenerator-runtime/runtime', 'redux-saga'], factory) :
+  (global['dva-core'] = factory(global.isPlainObject,global.invariant,global.warning,global.redux,global.flatten,global.window,global.sagaEffects,null,global.createSagaMiddleware));
+}(this, (function (isPlainObject,invariant,warning,redux,flatten,window,sagaEffects,runtime,createSagaMiddleware) { 'use strict';
 
   isPlainObject = isPlainObject && isPlainObject.hasOwnProperty('default') ? isPlainObject['default'] : isPlainObject;
   invariant = invariant && invariant.hasOwnProperty('default') ? invariant['default'] : invariant;
   warning = warning && warning.hasOwnProperty('default') ? warning['default'] : warning;
   flatten = flatten && flatten.hasOwnProperty('default') ? flatten['default'] : flatten;
   window = window && window.hasOwnProperty('default') ? window['default'] : window;
-  createSagaMiddleware = createSagaMiddleware && createSagaMiddleware.hasOwnProperty('default') ? createSagaMiddleware['default'] : createSagaMiddleware;
+  var createSagaMiddleware__default = 'default' in createSagaMiddleware ? createSagaMiddleware['default'] : createSagaMiddleware;
 
   function _typeof(obj) {
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -1031,7 +1031,7 @@
         }
       };
 
-      var sagaMiddleware = createSagaMiddleware();
+      var sagaMiddleware = createSagaMiddleware__default();
       var promiseMiddleware = createPromiseMiddleware(app);
       app._getSaga = getSaga.bind(null);
       var sagas = [];
@@ -1080,7 +1080,12 @@
       }); // Extend store
 
       store.runSaga = sagaMiddleware.run;
-      store.asyncReducers = {}; // Execute listeners when state is changed
+      store.asyncReducers = {};
+
+      store.close = function () {
+        return store.dispatch(createSagaMiddleware.END);
+      }; // Execute listeners when state is changed
+
 
       var listeners = plugin.get('onStateChange');
       var _iteratorNormalCompletion2 = true;
