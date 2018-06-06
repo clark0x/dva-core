@@ -31,7 +31,7 @@ const dvaModel = {
  * @param hooksAndOpts
  * @param createOpts
  */
-export function create(hooksAndOpts = {}, createOpts = {}) {
+export default function create(hooksAndOpts = {}, createOpts = {}) {
   const { initialReducer, setupApp = noop } = createOpts;
 
   const plugin = new Plugin();
